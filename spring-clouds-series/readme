@@ -1,0 +1,75 @@
+项目说明
+spring-clouds-series 项目包 为父项目（修改pom  将jar改为pom）
+1、项目名称：eurekaclient ，eurekaserver
+为服务发现的第一个程序
+服务发现
+
+2、项目名称：service-ribbon
+在微服务架构中，业务都会被拆分成一个独立的服务，服务与服务的通讯是基于http restful的。Spring cloud有两种服务调用方式，
+一种是ribbon+restTemplate，另一种是feign。在这一篇文章首先讲解下基于ribbon+rest。
+
+
+@LoadBalanced 开启负载均衡， Restemple 对返回的一种封装
+
+3、项目名称：serice-feign
+Feign是一个声明式的伪Http客户端，它使得写Http客户端变得更简单。使用Feign，只需要创建一个接口并注解。它具有可插拔的注解特性，
+可使用Feign 注解和JAX-RS注解。Feign支持可插拔的编码器和解码器。Feign默认集成了Ribbon，并和Eureka结合，默认实现了负载均衡的效果。
+
+根据注册的  @FeignClient(value = "service-client")  来调用。
+
+！！！feign的改造方式不是太清晰
+
+4、Netflix开源了Hystrix组件，实现了断路器模式
+在ribbon项目中添加依赖
+
+在主方法添加注解，即可显示断路器监控页面
+
+5、配置文件远程读取
+在分布式系统中，由于服务数量巨多，为了方便服务配置文件统一管理，实时更新，所以需要分布式配置中心组件。在Spring Cloud中，有分布式配置中心组件spring cloud config ，它支持配置服务放在配置服务的内存中（即本地），也支持放在远程Git仓库中。
+在spring cloud config 组件中，分两个角色，一是config server，二是config client。
+
+！！！获取远程配置中心，配置文件的方式，文件的格式是怎样一个规则？？？
+
+6、eureka-server  配置注册中心集群
+通过eureka注册多个项目，可以复制多份config-server 组成集群
+
+7、Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，
+也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。
+
+改造config-client项目，config-server项目 添加mq依赖
+
+/bus/refresh接口可以指定服务，即使用”destination”参数，
+比如 “/bus/refresh?destination=customers:**” 即刷新服务名为customers的所有服务，不管ip
+
+添加mq依赖后，项目client报错，暂时不处理。
+
+8、服务链路追踪
+
+Spring Cloud Sleuth 主要功能就是在分布式系统中提供追踪解决方案，
+并且兼容支持了 zipkin，你只需要在pom文件中引入相应的依赖即可。
+
+创建三个项目,zipkin ,server1,server2
+
+9、介绍了服务注册与发现，其中服务注册中心Eureka Server，是一个实例，当成千上万个服务向它注册的时候，它的负载是非常高的，
+这在生产环境上是不太合适的，这篇文章主要介绍怎么将Eureka Server集群化。
+
+简单讲就是服务注册中心 Eureka Server 集群
+
+10、
+
+11、断路器聚合，目的就是将多个服务的监控界面，放置在一个页面上
+
+12、spring cloud consul 组件，它是一个提供服务发现和配置的工具。
+consul具有分布式、高可用、高扩展性。
+
+13、
+
+
+14、
+15、
+16、
+17、
+
+
+
+
